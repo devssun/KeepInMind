@@ -12,9 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-/**
- * Created by choihyesun on 15. 11. 24..
- */
+
 public class ModifyList extends AppCompatActivity {
 
     private EditText modifyList;
@@ -40,6 +38,7 @@ public class ModifyList extends AppCompatActivity {
             modifyList.setHint(str);
             modifyList.setSelection(str.length());
         }
+        /////
 
         countTxt.setText(modifyList.getText().toString().length() + "/30");
 
