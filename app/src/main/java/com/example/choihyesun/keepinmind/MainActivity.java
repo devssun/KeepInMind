@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,12 +26,11 @@ public class MainActivity extends AppCompatActivity {
     private ListView list;
     private int itemPosition;
     private ArrayList<MyItem> checkList = new ArrayList<MyItem>();
+    private FloatingActionButton floatingActionButton;
     CustomAdapter adapter;
     MyItem vo;
 
     private TextView plusBtn;
-    private EditText editText;
-    String checkStr;
     LayoutInflater inflater;
     View dialogView;
 
@@ -48,8 +49,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         plusBtn = (TextView) findViewById(R.id.plusBtn);
-        editText = (EditText) findViewById(R.id.editCheck);
         plusBtn.setVisibility(View.GONE);
+
+        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CreateList.class);
+                startActivityForResult(intent, ADD);
+            }
+        });
 
         inflater = getLayoutInflater();
         dialogView = inflater.inflate(R.layout.create_list, null);
@@ -60,37 +69,6 @@ public class MainActivity extends AppCompatActivity {
         list.setAdapter(adapter);
         list.setOnItemLongClickListener(longListener);
     }
-
-    /* 리스트뷰 LongClickListener 수정, 삭제기능 Dialog*/
-    /*
-    AdapterView.OnItemLongClickListener longListener = new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            itemPosition = position;
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("체크리스트 수정")
-                    .setView(dialogView)
-                    .setPositiveButton("저장", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(MainActivity.this, CreateDialog.class);
-                            intent.putExtra("message", adapter.getItem(itemPosition));
-                            startActivityForResult(intent, EDIT);
-                            Toast.makeText(getApplicationContext(), "저장되었습니다", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("삭제", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            checkList.remove(itemPosition);
-                            adapter.notifyDataSetChanged();
-                            Toast.makeText(getApplicationContext(), "삭제되었습니다", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .show();
-            return false;
-        }
-    };*/
 
     AdapterView.OnItemLongClickListener longListener = new AdapterView.OnItemLongClickListener() {
         @Override
@@ -154,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.plus) {
-            Intent intent = new Intent(MainActivity.this, CreateList.class);
-            startActivityForResult(intent, ADD);
+        if(item.getItemId() == R.id.setting){
+            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

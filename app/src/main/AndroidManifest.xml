@@ -18,6 +18,7 @@
         <activity android:name=".CreateList">
             </activity>
         <activity android:name=".ModifyList"/>
+        <activity android:name=".SettingActivity"/>
     </application>
 
 </manifest>
