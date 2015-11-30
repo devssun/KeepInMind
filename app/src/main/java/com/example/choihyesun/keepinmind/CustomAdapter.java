@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,8 +50,14 @@ public class CustomAdapter extends BaseAdapter{
             convertView = inflater.inflate(layout, parent, false);
         }
 
+        CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
+        checkBox.setChecked(items.get(itemPosition).isChecked());
+
         TextView listTxt = (TextView) convertView.findViewById(R.id.listTxt);
-        listTxt.setText(items.get(position).getMessage());
+        listTxt.setText(items.get(itemPosition).getMessage());
+
+        TextView timeTxt = (TextView) convertView.findViewById(R.id.timeTxt);
+        timeTxt.setText(items.get(itemPosition).getTime());
 
         return convertView;
     }

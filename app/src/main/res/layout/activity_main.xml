@@ -45,7 +45,8 @@
         android:id="@+id/memoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,8 +62,19 @@
             android:layout_gravity="center_horizontal"
             android:text="질문텍스트"
             android:textSize="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/plantImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
+
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -72,5 +84,5 @@
         android:src="@android:drawable/ic_menu_edit"
         fab:fab_colorNormal="@color/colorPrimary"
         fab:fab_colorPressed="@color/colorPrimaryDark"
-        fab:fab_colorRipple="@color/colorAccent" />
+        fab:fab_colorRipple="@color/colorPrimaryDark" />
 </LinearLayout>

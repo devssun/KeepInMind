@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,8 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView plusBtn;
     LayoutInflater inflater;
     View dialogView;
-
-    CreateDialog createDialog;
+    InputMethodManager inputMethodManager;
 
     String[] str = {"체크리스트 수정", "삭제"};
 
@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int ADD = 1;
 
     int i = 0;
+
+    String currentDate;
+    Calendar today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         plusBtn = (TextView) findViewById(R.id.plusBtn);
         plusBtn.setVisibility(View.GONE);
 
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,8 +64,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         inflater = getLayoutInflater();
-        dialogView = inflater.inflate(R.layout.create_list, null);
+        //dialogView = inflater.inflate(R.layout.create_list, null);
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        today = Calendar.getInstance();
+        currentDate = today.get(Calendar.YEAR)+"/"+today.get(Calendar.MONTH)+"/"+today.get(Calendar.DAY_OF_MONTH);
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
         list = (ListView) findViewById(R.id.listView);
@@ -99,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
         if (requestCode == EDIT) {
@@ -115,9 +120,11 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ADD) {
             if (resultCode == RESULT_OK) {
                 String str = data.getStringExtra("createMsg");
-                vo = new MyItem(str);
+                //vo = new MyItem(false, str, "20003000");
+                vo = new MyItem(false, str, currentDate);
                 checkList.add(vo);
                 //Toast.makeText(MainActivity.this, "입력된 메세지가 없습니다", Toast.LENGTH_SHORT).show();
+                i++;
             }
         } else if (resultCode == RESULT_CANCELED) {
             finish();
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.setting){
+        if (item.getItemId() == R.id.setting) {
             Intent intent = new Intent(MainActivity.this, SettingActivity.class);
             startActivity(intent);
         }
