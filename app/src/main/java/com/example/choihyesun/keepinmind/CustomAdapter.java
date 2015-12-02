@@ -51,7 +51,8 @@ public class CustomAdapter extends BaseAdapter{
         }
 
         CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
-        checkBox.setChecked(items.get(itemPosition).isChecked());
+        //checkBox.setChecked(items.get(itemPosition).isChecked());
+        checkBox.setChecked(((ListView)parent).isItemChecked(itemPosition));
 
         TextView listTxt = (TextView) convertView.findViewById(R.id.listTxt);
         listTxt.setText(items.get(itemPosition).getMessage());

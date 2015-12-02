@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
+    // custom listView adapter var
     private ListView list;
     private int itemPosition;
     private ArrayList<MyItem> checkList = new ArrayList<MyItem>();
@@ -31,28 +34,29 @@ public class MainActivity extends AppCompatActivity {
     CustomAdapter adapter;
     MyItem vo;
 
-    private TextView plusBtn;
     LayoutInflater inflater;
-    View dialogView;
     InputMethodManager inputMethodManager;
 
+    // dialog menu
     String[] str = {"체크리스트 수정", "삭제"};
 
-    private static final int EDIT = 0;
-    private static final int ADD = 1;
+    // Activity RequestCode
+    private static final int EDIT = 0;  // ModifyListActivity
+    private static final int ADD = 1;   // CreateListActivity
 
     int i = 0;
 
+    // today Date
     String currentDate;
     Calendar today;
+
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        plusBtn = (TextView) findViewById(R.id.plusBtn);
-        plusBtn.setVisibility(View.GONE);
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -64,17 +68,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         inflater = getLayoutInflater();
-        //dialogView = inflater.inflate(R.layout.create_list, null);
+
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         today = Calendar.getInstance();
-        currentDate = today.get(Calendar.YEAR)+"/"+today.get(Calendar.MONTH)+"/"+today.get(Calendar.DAY_OF_MONTH);
+        currentDate = today.get(Calendar.YEAR)+"/"+(today.get(Calendar.MONTH)+1)+"/"+today.get(Calendar.DAY_OF_MONTH);
+
+        pref = getSharedPreferences("keepinmind", 0);
+
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
+        pref.getString("keepinmind", "");
         list = (ListView) findViewById(R.id.listView);
         list.setAdapter(adapter);
+        list.setOnItemClickListener(listener);
         list.setOnItemLongClickListener(longListener);
     }
+
+    AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            itemPosition = position;
+            checkList.get(itemPosition).setChecked(!checkList.get(itemPosition).isChecked());
+        }
+    };
 
     AdapterView.OnItemLongClickListener longListener = new AdapterView.OnItemLongClickListener() {
         @Override
@@ -91,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
                                 startActivityForResult(intent, EDIT);
                             } else if (str[which].equals("삭제")) {
                                 checkList.remove(itemPosition);
+                                editor = pref.edit();
+                                editor.remove("keepinmind");
+                                editor.commit();
                                 adapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(), "삭제되었습니다", Toast.LENGTH_SHORT).show();
                             }
@@ -122,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
                 String str = data.getStringExtra("createMsg");
                 //vo = new MyItem(false, str, "20003000");
                 vo = new MyItem(false, str, currentDate);
+                editor = pref.edit();
+                editor.putString("keepinmind", str);
+                editor.commit();
                 checkList.add(vo);
                 //Toast.makeText(MainActivity.this, "입력된 메세지가 없습니다", Toast.LENGTH_SHORT).show();
                 i++;
