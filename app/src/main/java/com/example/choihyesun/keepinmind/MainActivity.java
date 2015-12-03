@@ -83,15 +83,9 @@ public class MainActivity extends AppCompatActivity {
         today = Calendar.getInstance();
         currentDate = today.get(Calendar.YEAR) + "/" + (today.get(Calendar.MONTH) + 1) + "/" + today.get(Calendar.DAY_OF_MONTH);
 
-        pref = getSharedPreferences("keepinmind", 0);
-
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
         helper = new MySQLiteOpenHelper(MainActivity.this, "checkList2.db", null, 1);
-
-        //update("유저6", 7);
-
-        //delete("유저2");
 
         select();
 
@@ -145,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String str = data.getStringExtra("sendMsg");
                 checkList.get(itemPosition).setMessage(str);
+                update(checkList.get(itemPosition).getMessage(), checkList.get(itemPosition).getIndex());
                 adapter.notifyDataSetChanged();
                 //Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
@@ -160,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
                 select();
                 adapter.notifyDataSetChanged();
                 //Toast.makeText(MainActivity.this, "입력된 메세지가 없습니다", Toast.LENGTH_SHORT).show();
-                i++;
             }
         } else if (resultCode == RESULT_CANCELED) {
             finish();
