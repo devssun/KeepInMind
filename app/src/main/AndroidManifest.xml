@@ -19,7 +19,6 @@
             </activity>
         <activity android:name=".ModifyList"/>
         <activity android:name=".SettingActivity"/>
-        <!--<activity android:name=".DataPreference"/>-->
     </application>
 
 </manifest>

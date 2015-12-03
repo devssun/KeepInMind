@@ -5,22 +5,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -48,19 +43,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int EDIT = 0;  // ModifyListActivity
     private static final int ADD = 1;   // CreateListActivity
 
-    int i = 0;
-
     // today Date
     String currentDate;
     Calendar today;
 
-    SharedPreferences pref;
-    SharedPreferences.Editor editor;
-
+    // SQLite, OpenHelper
     SQLiteDatabase db;
     MySQLiteOpenHelper helper;
-
-    private String tableName = "checkList2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

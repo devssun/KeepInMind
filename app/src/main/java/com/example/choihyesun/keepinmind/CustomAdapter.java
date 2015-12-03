@@ -50,7 +50,7 @@ public class CustomAdapter extends BaseAdapter{
             convertView = inflater.inflate(layout, parent, false);
         }
 
-        CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
+        com.rey.material.widget.CheckBox checkBox = (com.rey.material.widget.CheckBox) convertView.findViewById(R.id.checkbox);
         checkBox.setChecked(((ListView)parent).isItemChecked(itemPosition));
 
         TextView listTxt = (TextView) convertView.findViewById(R.id.listTxt);
