@@ -1,13 +1,17 @@
 package com.example.choihyesun.keepinmind;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
 
+    SQLiteDatabase db;
+    MySQLiteOpenHelper helper;
+
+    private String tableName = "checkList2";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,13 +81,20 @@ public class MainActivity extends AppCompatActivity {
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         today = Calendar.getInstance();
-        currentDate = today.get(Calendar.YEAR)+"/"+(today.get(Calendar.MONTH)+1)+"/"+today.get(Calendar.DAY_OF_MONTH);
+        currentDate = today.get(Calendar.YEAR) + "/" + (today.get(Calendar.MONTH) + 1) + "/" + today.get(Calendar.DAY_OF_MONTH);
 
         pref = getSharedPreferences("keepinmind", 0);
 
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
-        pref.getString("keepinmind", "");
+        helper = new MySQLiteOpenHelper(MainActivity.this, "checkList2.db", null, 1);
+
+        //update("유저6", 7);
+
+        //delete("유저2");
+
+        select();
+
         list = (ListView) findViewById(R.id.listView);
         list.setAdapter(adapter);
         list.setOnItemClickListener(listener);
@@ -95,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     AdapterView.OnItemLongClickListener longListener = new AdapterView.OnItemLongClickListener() {
         @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
             itemPosition = position;
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("메뉴")
@@ -108,9 +124,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivityForResult(intent, EDIT);
                             } else if (str[which].equals("삭제")) {
                                 checkList.remove(itemPosition);
-                                editor = pref.edit();
-                                editor.remove("keepinmind");
-                                editor.commit();
+                                delete(checkList.get(itemPosition).getIndex());
                                 adapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(), "삭제되었습니다", Toast.LENGTH_SHORT).show();
                             }
@@ -140,17 +154,51 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ADD) {
             if (resultCode == RESULT_OK) {
                 String str = data.getStringExtra("createMsg");
-                //vo = new MyItem(false, str, "20003000");
                 vo = new MyItem(false, str, currentDate);
-                editor = pref.edit();
-                editor.putString("keepinmind", str);
-                editor.commit();
+                insert(vo.getMessage(), vo.getTime());
                 checkList.add(vo);
+                select();
+                adapter.notifyDataSetChanged();
                 //Toast.makeText(MainActivity.this, "입력된 메세지가 없습니다", Toast.LENGTH_SHORT).show();
                 i++;
             }
         } else if (resultCode == RESULT_CANCELED) {
             finish();
+        }
+    }
+
+    public void insert(String name, String time) {
+        db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("name", name);
+        values.put("time", time);
+        db.insert("checkList2", null, values);
+    }
+
+    public void update(String name, int index) {
+        String sql = "update " + "checkList2" + " set name = '" + name + "' where _id = " + index + ";";
+        db.execSQL(sql);
+    }
+
+    public void delete(int index) {
+        db = helper.getWritableDatabase();
+
+        db.delete("checkList2", "_id=?", new String[]{String.valueOf(index)});
+        //Log.i("db", name + "정상적으로 삭제 되었습니다");
+    }
+
+    public void select() {
+        db = helper.getReadableDatabase();
+        Cursor c = db.query("checkList2", null, null, null, null, null, null);
+        checkList.clear();
+        while (c.moveToNext()) {
+            MyItem vo;
+            vo = new MyItem();
+            vo.setIndex(c.getInt(c.getColumnIndex("_id")));
+            vo.setMessage(c.getString(c.getColumnIndex("name")));
+            vo.setTime(c.getString(c.getColumnIndex("time")));
+            checkList.add(vo);
         }
     }
 

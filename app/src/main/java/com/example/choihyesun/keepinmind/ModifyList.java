@@ -38,7 +38,6 @@ public class ModifyList extends AppCompatActivity {
             modifyList.setHint(str);
             modifyList.setSelection(str.length());
         }
-        /////
 
         countTxt.setText(modifyList.getText().toString().length() + "/30");
 

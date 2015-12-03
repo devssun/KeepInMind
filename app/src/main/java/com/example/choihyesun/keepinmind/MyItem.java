@@ -6,14 +6,27 @@ import android.widget.CheckBox;
  * Created by choihyesun on 15. 11. 9..
  */
 public class MyItem {
+    private int index;
     private boolean checked;
     private String message;
     private String time;
 
+    public MyItem(){
+
+    }
     public MyItem (boolean checked, String message, String time){
+        //this.index = index;
         this.checked = checked;
         this.message = message;
         this.time = time;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public boolean isChecked() {
