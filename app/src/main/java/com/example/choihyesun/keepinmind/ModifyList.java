@@ -61,7 +61,7 @@ public class ModifyList extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.ok_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
