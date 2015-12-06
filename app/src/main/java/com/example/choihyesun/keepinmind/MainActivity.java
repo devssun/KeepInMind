@@ -9,12 +9,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,7 +25,7 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener{
 
     // custom listView adapter var
     private ListView list;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
-        helper = new MySQLiteOpenHelper(MainActivity.this, "CheckList.db", null, 1);
+        helper = new MySQLiteOpenHelper(MainActivity.this, "TodoList.db", null, 1);
 
         select();
 
@@ -88,7 +90,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             itemPosition = position;
+            vo = new MyItem();
             checkList.get(itemPosition).setChecked(!checkList.get(itemPosition).isChecked());
+            vo.setChecked(!checkList.get(itemPosition).isChecked());
+            Log.i("db", checkList.get(itemPosition).getMessage()+ ", "+ vo.isChecked() +", "+ checkList.get(itemPosition).isChecked() + "");
+            Toast.makeText(getApplicationContext(), checkList.get(itemPosition).getMessage()+", "+vo.isChecked(), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -110,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
                                 delete(checkList.get(itemPosition).getIndex());
                                 adapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(), "삭제되었습니다", Toast.LENGTH_SHORT).show();
-                            } else if(str[which].equals("보관하기")){
-                                Toast.makeText(getApplicationContext(), "보관되었습니다", Toast.LENGTH_SHORT).show();
                             }
                         }
                     })
@@ -119,6 +123,11 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Toast.makeText(getApplicationContext(), "Checked", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -132,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 checkList.get(itemPosition).setMessage(str);
                 update(checkList.get(itemPosition).getMessage(), checkList.get(itemPosition).getIndex());
                 adapter.notifyDataSetChanged();
-                //Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 finish();
             }
@@ -141,41 +149,40 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String str = data.getStringExtra("createMsg");
                 vo = new MyItem(false, str, currentDate);
-                insert(vo.getMessage(), vo.getTime());
+                insert(vo.getMessage(), vo.getTime(), vo.isChecked());
                 checkList.add(vo);
                 select();
                 adapter.notifyDataSetChanged();
-                //Toast.makeText(MainActivity.this, "입력된 메세지가 없습니다", Toast.LENGTH_SHORT).show();
             }
         } else if (resultCode == RESULT_CANCELED) {
             finish();
         }
     }
 
-    public void insert(String name, String time) {
+    public void insert(String name, String time, boolean checked) {
         db = helper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("time", time);
-        db.insert("CheckList", null, values);
+        values.put("checked", checked);
+        db.insert("todoList1", null, values);
     }
 
     public void update(String name, int index) {
-        String sql = "update " + "CheckList" + " set name = '" + name + "' where _id = " + index + ";";
+        String sql = "update " + "todoList1" + " set name = '" + name + "' where _id = " + index + ";";
         db.execSQL(sql);
     }
 
     public void delete(int index) {
         db = helper.getWritableDatabase();
 
-        db.delete("CheckList", "_id=?", new String[]{String.valueOf(index)});
-        //Log.i("db", name + "정상적으로 삭제 되었습니다");
+        db.delete("todoList1", "_id=?", new String[]{String.valueOf(index)});
     }
 
     public void select() {
         db = helper.getReadableDatabase();
-        Cursor c = db.query("CheckList", null, null, null, null, null, null);
+        Cursor c = db.query("todoList1", null, null, null, null, null, null);
         checkList.clear();
         while (c.moveToNext()) {
             MyItem vo;

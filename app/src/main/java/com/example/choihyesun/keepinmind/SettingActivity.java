@@ -17,15 +17,17 @@ public class SettingActivity extends AppCompatActivity{
 
     private TextView versionTxt;
     private CheckBox lockMode;
+    private com.rey.material.widget.Button resetBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_layout);
-        setTitle("설정");
+        setTitle("환경 설정");
 
         versionTxt = (TextView) findViewById(R.id.versionTxt);
         lockMode = (CheckBox) findViewById(R.id.lockCheck);
+        resetBtn = (com.rey.material.widget.Button) findViewById(R.id.resetBtn);
 
         lockMode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +37,13 @@ public class SettingActivity extends AppCompatActivity{
                 }else{
                     Toast.makeText(getApplicationContext(), "잠금화면이 해제되었습니다", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        resetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }

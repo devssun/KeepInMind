@@ -25,7 +25,7 @@ public class CreateList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_list_layout);
-        setTitle("체크리스트 만들기");
+        setTitle("To do List 만들기");
         createList = (EditText) findViewById(R.id.inputList);
         countTxt = (TextView) findViewById(R.id.count);
 

@@ -23,7 +23,7 @@ public class ModifyList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.modify_list_layout);
-        setTitle("체크리스트 수정");
+        setTitle("To do List 수정하기");
 
         modifyList = (EditText) findViewById(R.id.inputList);
         countTxt = (TextView) findViewById(R.id.count);

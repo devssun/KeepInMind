@@ -45,7 +45,7 @@ public class StorageActivity extends AppCompatActivity {
 
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
-        helper = new MySQLiteOpenHelper(StorageActivity.this, "CheckList.db", null, 1);
+        helper = new MySQLiteOpenHelper(StorageActivity.this, "TodoList.db", null, 1);
 
         select();
 
@@ -79,13 +79,13 @@ public class StorageActivity extends AppCompatActivity {
     public void delete(int index) {
         db = helper.getWritableDatabase();
 
-        db.delete("CheckList", "_id=?", new String[]{String.valueOf(index)});
+        db.delete("todoList1", "_id=?", new String[]{String.valueOf(index)});
         //Log.i("db", name + "정상적으로 삭제 되었습니다");
     }
 
     public void select() {
         db = helper.getReadableDatabase();
-        Cursor c = db.query("CheckList", null, null, null, null, null, null);
+        Cursor c = db.query("todoList1", null, null, null, null, null, null);
         checkList.clear();
         while (c.moveToNext()) {
             MyItem vo;
