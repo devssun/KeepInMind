@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                                 intent.putExtra("modifyMsg", adapter.getItem(itemPosition));
                                 startActivityForResult(intent, EDIT);
                             } else if (str[which].equals("삭제하기")) {
-                                checkList.remove(itemPosition);
                                 delete(checkList.get(itemPosition).getIndex());
+                                checkList.remove(itemPosition);
                                 adapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(), "삭제되었습니다", Toast.LENGTH_SHORT).show();
                             }
