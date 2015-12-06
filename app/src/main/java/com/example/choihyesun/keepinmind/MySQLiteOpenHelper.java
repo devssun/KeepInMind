@@ -17,14 +17,17 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         //checkList2, checkList
         String sql = "create table todoList1 (_id integer primary key autoincrement, name text, time text, checked tinyint);";
+        String sql2 = "create table storageList (_id integer primary key autoincrement, name text, time text, checked tinyint);";
         db.execSQL(sql);
+        db.execSQL(sql2);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql = "drop table if exists todoList1";
+        String sql2 = "drop table if exists storageList";
         db.execSQL(sql);
-
+        db.execSQL(sql2);
         onCreate(db);
     }
 }

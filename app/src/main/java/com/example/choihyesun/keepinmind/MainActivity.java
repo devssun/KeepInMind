@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
-        helper = new MySQLiteOpenHelper(MainActivity.this, "TodoList.db", null, 1);
+        helper = new MySQLiteOpenHelper(MainActivity.this, "TodoList.db", null, 2);
 
         select();
 
@@ -93,8 +93,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             vo = new MyItem();
             checkList.get(itemPosition).setChecked(!checkList.get(itemPosition).isChecked());
             vo.setChecked(!checkList.get(itemPosition).isChecked());
-            Log.i("db", checkList.get(itemPosition).getMessage()+ ", "+ vo.isChecked() +", "+ checkList.get(itemPosition).isChecked() + "");
-            Toast.makeText(getApplicationContext(), checkList.get(itemPosition).getMessage()+", "+vo.isChecked(), Toast.LENGTH_SHORT).show();
+            //Log.i("db", checkList.get(itemPosition).getMessage()+ ", "+ vo.isChecked() +", "+ checkList.get(itemPosition).isChecked() + "");
+
+            insertStorage(checkList.get(itemPosition).getMessage(), checkList.get(itemPosition).getTime(), checkList.get(itemPosition).isChecked());
+            Toast.makeText(getApplicationContext(), "보관함으로 이동되었습니다", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -167,6 +169,16 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         values.put("time", time);
         values.put("checked", checked);
         db.insert("todoList1", null, values);
+    }
+
+    public void insertStorage(String name, String time, boolean checked) {
+        db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("name", name);
+        values.put("time", time);
+        values.put("checked", checked);
+        db.insert("storageList", null, values);
     }
 
     public void update(String name, int index) {
