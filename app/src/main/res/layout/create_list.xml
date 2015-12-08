@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:background="#ffffff"
-        android:hint="체크리스트 수정"
+        android:hint="to-do list 수정"
         android:padding="12dp"
         android:textColor="#000000"
         android:textSize="15dp" />

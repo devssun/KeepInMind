@@ -11,39 +11,39 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="false"
-        android:gravity="center_vertical"/>
+        android:gravity="center_vertical" />
 
     <TextView
         android:id="@+id/listTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_gravity="center"
         android:layout_toRightOf="@id/checkbox"
-        android:textStyle="bold"
         android:maxLength="30"
         android:text="메세지"
-        android:textSize="12dp"/>
+        android:textSize="12dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/timeTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_gravity="center"
-        android:layout_alignParentRight="true"
-        android:textStyle="bold"
         android:text="시간"
-        android:textSize="12dp"/>
+        android:textSize="12dp"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/listTxt"
         android:layout_alignLeft="@id/listTxt"
+        android:layout_below="@id/listTxt"
         android:layout_marginTop="12dp"
-        android:background="#a9a8a8"/>
+        android:background="#a9a8a8" />
 
 </RelativeLayout>

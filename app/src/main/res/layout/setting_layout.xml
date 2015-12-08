@@ -91,12 +91,12 @@
             android:id="@+id/sortDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="내림차순"
-            android:textSize="18dp"
             android:layout_alignBottom="@+id/sortSwitch"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:text="내림차순"
+            android:textSize="18dp" />
 
         <com.rey.material.widget.Switch
             android:id="@+id/sortSwitch"
@@ -129,8 +129,8 @@
             android:layout_centerVertical="true"
             android:background="@android:color/white"
             android:text="초기화"
-            app:rd_enable="true"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            app:rd_enable="true" />
 
     </RelativeLayout>
 
@@ -155,7 +155,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:text="컴퓨터미디어정보공학부 14학번 최혜선"
+            android:text="컴퓨터미디어정보공학부 201401305 최혜선"
             android:textSize="18dp" />
     </RelativeLayout>
 

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     InputMethodManager inputMethodManager;
 
     // dialog menu
-    String[] str = {"수정하기", "삭제하기", "보관하기"};
+    String[] str = {"수정하기", "삭제하기"};
 
     // Activity RequestCode
     private static final int EDIT = 0;  // ModifyListActivity
