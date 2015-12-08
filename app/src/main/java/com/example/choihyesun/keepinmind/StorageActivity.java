@@ -45,7 +45,7 @@ public class StorageActivity extends AppCompatActivity {
 
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
-        helper = new MySQLiteOpenHelper(StorageActivity.this, "TodoList.db", null, 2);
+        helper = new MySQLiteOpenHelper(StorageActivity.this, "TodoList.db", null, 3);
 
         select();
 

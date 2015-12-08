@@ -43,18 +43,18 @@
         fab:fab_colorPressed="@color/colorPrimaryDark"
         fab:fab_colorRipple="@color/colorPrimaryDark" />
 
-    <!--
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
-        <ImageView
-            android:id="@+id/plantImg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/scoreTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="목표 달성 점수 : "
+            android:textSize="25dp"/>
 
     </LinearLayout>
-    -->
-
-
 </LinearLayout>

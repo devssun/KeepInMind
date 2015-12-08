@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -25,7 +26,7 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener{
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
     // custom listView adapter var
     private ListView list;
@@ -53,6 +54,14 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     SQLiteDatabase db;
     MySQLiteOpenHelper helper;
 
+    // score
+    private TextView scoreTxt;
+    static int score = 0;
+    static int origin;
+
+    // App finish
+    private BackPressCloseHandler backPressCloseHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +85,13 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         adapter = new CustomAdapter(this, R.layout.layout_list_row, checkList);
 
-        helper = new MySQLiteOpenHelper(MainActivity.this, "TodoList.db", null, 2);
+        helper = new MySQLiteOpenHelper(MainActivity.this, "TodoList.db", null, 3);
+
+        backPressCloseHandler = new BackPressCloseHandler(this);
+
+        scoreTxt = (TextView) findViewById(R.id.scoreTxt);
+        //origin = selectScore();
+        scoreTxt.setText("목표 달성 점수 : " + score);
 
         select();
 
@@ -93,8 +108,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             vo = new MyItem();
             checkList.get(itemPosition).setChecked(!checkList.get(itemPosition).isChecked());
             vo.setChecked(!checkList.get(itemPosition).isChecked());
-            //Log.i("db", checkList.get(itemPosition).getMessage()+ ", "+ vo.isChecked() +", "+ checkList.get(itemPosition).isChecked() + "");
 
+            score += 20;
+            insertScore(score);
+            scoreTxt.setText("목표 달성 점수 : " + score);
             insertStorage(checkList.get(itemPosition).getMessage(), checkList.get(itemPosition).getTime(), checkList.get(itemPosition).isChecked());
             Toast.makeText(getApplicationContext(), "보관함으로 이동되었습니다", Toast.LENGTH_SHORT).show();
         }
@@ -128,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Toast.makeText(getApplicationContext(), "Checked", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Checked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -181,6 +198,14 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         db.insert("storageList", null, values);
     }
 
+    public void insertScore(int score) {
+        db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("score", score);
+        db.insert("score", null, values);
+    }
+
     public void update(String name, int index) {
         String sql = "update " + "todoList1" + " set name = '" + name + "' where _id = " + index + ";";
         db.execSQL(sql);
@@ -194,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     public void select() {
         db = helper.getReadableDatabase();
+
         Cursor c = db.query("todoList1", null, null, null, null, null, null);
         checkList.clear();
         while (c.moveToNext()) {
@@ -207,6 +233,21 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
     }
 
+    public int selectScore() {
+        db = helper.getReadableDatabase();
+
+        Cursor c = db.query("score", null, null, null, null, null, null);
+        score = c.getColumnIndex("score");
+
+        return score;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        backPressCloseHandler.onBackPressed();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -218,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         if (item.getItemId() == R.id.setting) {
             Intent intent = new Intent(MainActivity.this, SettingActivity.class);
             startActivity(intent);
-        } else if (item.getItemId() == R.id.storage){
+        } else if (item.getItemId() == R.id.storage) {
             Intent intent = new Intent(MainActivity.this, StorageActivity.class);
             startActivity(intent);
         }
